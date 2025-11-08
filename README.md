@@ -3,7 +3,7 @@
 ### Challenge 7 – TechnoReady Bootcamp  
 
 **Students:** Eduardo Antonio Gutiérrez Carreon, Iván Kaleb Ramírez Torres  
-**Instructor:** Digital NAO Instructor  Eli
+**Instructor:** Digital NAO Instructor Eli
 **Platform:** BookingMx (Hotel Reservation System)  
 **Date:** November 2025  
 
@@ -88,7 +88,7 @@ Through this challenge, we aim to **guarantee code quality, increase coverage (�
 
 
 <details>
-<summary>Sprint 2</summary>
+<summary> Sprint 1 </summary>
 
 # BookingMx — Sprint 1 (Unit Testing in Java with JUnit + JaCoCo)
 
