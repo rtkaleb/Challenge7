@@ -85,10 +85,7 @@ Through this challenge, we aim to **guarantee code quality, increase coverage (�
 
 ---
 
-
-
-<details>
-<summary> Sprint 1 </summary>
+## Sprint 1 
 
 # BookingMx — Sprint 1 (Unit Testing in Java with JUnit + JaCoCo)
 
@@ -373,7 +370,6 @@ Notes: Branches under 90% because conflict resolution has multiple paths. Will i
 - Sprint 3: Integrate both reports in CI (e.g., GitHub Actions) and tighten docs.
 
 
-</details>
 ---
 
 ## 🌱 Sustainability
