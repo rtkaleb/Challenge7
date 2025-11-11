@@ -1,0 +1,17 @@
+{
+  "name": "bookingmx-sprint2-jest",
+  "version": "1.0.0",
+  "description": "Sprint 2: Unit tests with Jest for graph visualization (nearby cities & distances)",
+  "main": "src/graph.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "coverage:open": "node -e \"require('child_process').exec(process.platform==='win32'?'start coverage\\\\lcov-report\\\\index.html':'xdg-open coverage/lcov-report/index.html')\""
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "author": "",
+  "license": "MIT"
+}

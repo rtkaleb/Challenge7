@@ -369,6 +369,219 @@ Notes: Branches under 90% because conflict resolution has multiple paths. Will i
 - Sprint 2: JavaScript module (Jest) for **nearby cities graph** (we’ll set up Node + Jest + jsdom and write tests for data shaping and distance calc).
 - Sprint 3: Integrate both reports in CI (e.g., GitHub Actions) and tighten docs.
 
+---
+# 🧪 Sprint 2 – Unit Testing with Jest for Graph Visualization  
+### Challenge 7 – BookingMx
+
+## 📘 Project Overview
+
+During this sprint, the focus was on **testing and validating the JavaScript module** responsible for generating a **graph of nearby cities** around a customer’s chosen destination within the **BookingMx** platform.  
+This feature visually connects destinations based on their geographic proximity, allowing users to explore alternative travel options within a specific radius.
+
+The **main objective** of Sprint 2 was to ensure that the logic for computing distances, filtering nearby cities, and constructing the visual graph was fully tested, **stable under all conditions**, and maintained a **minimum coverage threshold of 90%**.
+
+The sprint included:
+1. Environment setup and Jest configuration.  
+2. Development of automated test cases for the graph logic and distance calculations.  
+3. Validation of error handling and input sanitation.  
+4. Generation of a coverage report.  
+5. Documentation of key technical challenges and solutions.
+
+---
+
+## 🎯 General Objective
+
+To guarantee the **functional correctness, stability, and maintainability** of the JavaScript graph visualization module through comprehensive **unit testing** using the Jest framework.
+
+---
+
+## 🧩 Technical Context
+
+The graph visualization module connects a *destination city* to several *neighboring cities*, representing each as **nodes** and **edges**:
+
+- **Nodes** → cities (destination + nearby).
+- **Edges** → links between the destination and nearby cities, annotated with the physical distance in kilometers.
+- The algorithm excludes duplicates, filters cities that exceed the defined distance limit, and orders them by proximity.
+
+This module depends on precise geospatial calculations based on latitude and longitude coordinates, employing the **Haversine formula** to measure great-circle distances on Earth.
+
+---
+
+## ⚙️ Functional Components
+
+### 1️⃣ `src/haversine.js`
+Implements the **Haversine formula** to calculate the distance (in kilometers) between two geographical points given their latitude and longitude.  
+The module includes:
+- **Validation** of coordinate values and ranges (lat ∈ [-90, 90], lng ∈ [-180, 180]).
+- **Exceptions** (`TypeError`, `RangeError`) for malformed or missing inputs.
+- Output rounding to three decimal places for consistency.
+
+### 2️⃣ `src/graph.js`
+Builds and manages the **graph structure** of nearby cities.
+Main responsibilities:
+- **`assertCity(city)`** → Validates each city object’s structure and data types.  
+- **`normalizeInput(destination, cities)`** → Cleans and filters input data, removing duplicates and invalid entries.  
+- **`computeNearby(destination, cities, options)`** → Computes distances to all valid cities and selects the nearest ones according to `maxDistanceKm` and `topK` limits.  
+- **`buildGraph(destination, cities, options)`** → Integrates all steps, returning a graph object containing `nodes`, `edges`, and `meta` information.
+
+---
+
+## 🧪 Unit Testing Implementation
+
+The testing framework used was **Jest**, which allowed an expressive syntax for defining, running, and reporting test results.  
+All tests were designed following the **AAA (Arrange–Act–Assert)** pattern to ensure readability and maintainability.
+
+### 🧮 `__tests__/haversine.test.js`
+- Validates distance calculation between known cities (e.g., Mexico City ↔ Monterrey ≈ 705 km).  
+- Ensures invalid coordinates produce explicit exceptions.  
+- Confirms correct behavior for boundary values and numerical precision.
+
+### 🧠 `__tests__/graph.test.js`
+- Confirms that input normalization correctly removes nulls, duplicates, and invalid data.  
+- Verifies that the destination is excluded from the list of nearby cities.  
+- Tests that computed distances respect the configured maximum radius (`maxDistanceKm`).  
+- Checks that nearby cities are sorted in ascending order by distance.  
+- Ensures the graph returns the correct number of nodes and edges.  
+- Validates that improper configurations (e.g., `topK = 0`) throw descriptive errors.
+
+All tests were crafted to handle **unexpected inputs** and **graceful degradation**, ensuring the module would never break the application when receiving malformed or incomplete data.
+
+---
+
+## 🧰 Configuration Details
+
+### Jest Configuration (`jest.config.cjs`)
+- Sets test environment to Node.js.
+- Collects coverage from all files under `/src/`.
+- Enforces global coverage thresholds (90% minimum on all metrics).
+- Generates textual and HTML coverage reports.
+
+```javascript
+coverageThreshold: {
+  global: {
+    branches: 90,
+    functions: 90,
+    lines: 90,
+    statements: 90
+  }
+}
+```
+
+### npm Scripts (`package.json`)
+```json
+"scripts": {
+  "test": "jest --coverage",
+  "test:watch": "jest --watch",
+  "coverage:open": "node -e "require('child_process').exec(process.platform==='win32'?'start coverage\\lcov-report\\index.html':'xdg-open coverage/lcov-report/index.html')""
+}
+```
+
+---
+
+## 🧾 Execution and Coverage Results
+
+After running `npm test`, all defined cases passed successfully.  
+The coverage report demonstrated that the target threshold was exceeded.
+
+| Metric | Coverage |
+|---------|-----------|
+| Statements | 96% |
+| Branches | 93% |
+| Functions | 95% |
+| Lines | 97% |
+
+Jest automatically generated an HTML report stored in:
+```
+/coverage/lcov-report/index.html
+```
+This report includes color-coded metrics per file, showing precisely which lines and branches were executed during testing.
+
+---
+
+## 🔍 Quality Validation and Error Scenarios
+
+Each function was evaluated under both **normal** and **edge** conditions:
+
+| Test Scenario | Expected Result |
+|----------------|----------------|
+| Valid coordinates | Correct distance in km |
+| Missing `lat` or `lng` | `TypeError` with descriptive message |
+| Latitude > 90 or < –90 | `RangeError` |
+| City array empty | Returns graph with one node (destination only) |
+| Duplicate IDs | Duplicates removed automatically |
+| Invalid `maxDistanceKm` / `topK` | `RangeError` exception |
+| Null entries in array | Ignored during normalization |
+| Distance limit exceeded | City excluded from results |
+
+This rigorous approach guarantees that any data inconsistency or malformed input is properly managed, preventing runtime failures in the BookingMx web platform.
+
+---
+
+## 📸 Evidence of Testing
+
+| No. | Screenshot | Description |
+|-----|-------------|-------------|
+| 1 | ![Coverage Summary](Images/imagen1.png) | Terminal output showing Jest summary with 90%+ coverage. |
+| 2 | ![Coverage HTML](Images/imagen2.png) | Screenshot of `lcov-report/index.html` coverage dashboard. |
+| 3 | ![All Tests Passing](Images/imagen3.png) | Console showing all Jest tests executed successfully. |
+
+---
+
+## 🧠 Technical Learnings and Key Insights
+
+- **Test-driven development principles** allowed identifying logical errors before integration.  
+- Early **input validation** (`assertCity`) simplified debugging and reduced propagation of bad data.  
+- Reusing mathematical functions (`distanceKm`) improved modularity and reduced redundancy.  
+- Incorporating **coverage thresholds** provided continuous measurement of quality standards.  
+- Test design following AAA methodology facilitated future code maintenance and readability.  
+- Detailed error messages and structured exceptions increased clarity and developer feedback during testing.
+
+---
+
+## 🗂️ Repository Structure
+
+```
+bookingmx-sprint2-jest/
+├─ src/
+│  ├─ haversine.js
+│  └─ graph.js
+├─ __tests__/
+│  ├─ graph.test.js
+│  └─ haversine.test.js
+├─ data/
+│  └─ sampleCities.json
+├─ docs/
+│  └─ TECH_DIFFICULTIES.md
+├─ jest.config.cjs
+├─ package.json
+└─ README_SPRINT2.md
+```
+
+---
+
+## 📄 Conclusions
+
+This sprint successfully validated the **graph visualization logic** used in the BookingMx platform.  
+By achieving high coverage and extensive testing of both standard and exceptional scenarios, the system now demonstrates:
+
+- Robust handling of input data.  
+- Reliable distance computation.  
+- Clear modular design that supports scalability and maintenance.  
+- Automated verification pipeline ready for continuous integration environments.
+
+The resulting testing suite ensures that any future updates to the visualization logic will remain secure, measurable, and easy to refactor without risking functional regressions.
+
+---
+
+## 📚 References
+
+- Jest Documentation: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)  
+- Haversine Formula – Wikipedia: [https://en.wikipedia.org/wiki/Haversine_formula](https://en.wikipedia.org/wiki/Haversine_formula)  
+- Node.js API Reference: [https://nodejs.org/en/docs](https://nodejs.org/en/docs)
+
+
+
+
 
 ---
 
