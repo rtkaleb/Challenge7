@@ -1,0 +1,32 @@
+[
+  {
+    "id": "MTY",
+    "name": "Monterrey",
+    "lat": 25.6866,
+    "lng": -100.3161
+  },
+  {
+    "id": "GDL",
+    "name": "Guadalajara",
+    "lat": 20.6597,
+    "lng": -103.3496
+  },
+  {
+    "id": "CDMX",
+    "name": "Ciudad de México",
+    "lat": 19.4326,
+    "lng": -99.1332
+  },
+  {
+    "id": "SALT",
+    "name": "Saltillo",
+    "lat": 25.438,
+    "lng": -100.979
+  },
+  {
+    "id": "REYN",
+    "name": "Reynosa",
+    "lat": 26.0922,
+    "lng": -98.2777
+  }
+]
