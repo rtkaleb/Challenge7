@@ -85,7 +85,7 @@ Through this challenge, we aim to **guarantee code quality, increase coverage (â
 
 ---
 
-## Sprint 1 
+# Sprint 1 
 
 # BookingMx â€” Sprint 1 (Unit Testing in Java with JUnit + JaCoCo)
 

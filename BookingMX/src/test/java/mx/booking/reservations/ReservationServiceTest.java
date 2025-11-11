@@ -1,3 +1,4 @@
+git status
 package mx.booking.reservations;
 
 import org.junit.jupiter.api.BeforeEach;
