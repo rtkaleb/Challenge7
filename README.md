@@ -370,6 +370,18 @@ Notes: Branches under 90% because conflict resolution has multiple paths. Will i
 - Sprint 3: Integrate both reports in CI (e.g., GitHub Actions) and tighten docs.
 
 ---
+
+## 📸 Evidence – Screenshots
+
+| No. | Screenshot | Description |
+|-----|-------------|-------------|
+| 1 | ![JUnit Config](Images/img1.png) | JUnit and JaCoCo setup in IntelliJ |
+| 2 | ![Passing Tests](Images/img2.png) | Successful test suite execution |
+| 3 | ![Coverage Report](Images/img3.png) | JaCoCo report reaching 91% coverage |
+| 4 | ![Jest Graph Test](Images/img4.png) | Jest coverage of nearby cities visualization |
+| 5 | ![GitHub CI](Images/img5.png) | Automated test execution in GitHub Actions |
+
+---
 # 🧪 Sprint 2 – Unit Testing with Jest for Graph Visualization  
 ### Challenge 7 – BookingMx
 
@@ -621,17 +633,7 @@ The resulting testing suite ensures that any future updates to the visualization
 
 > *Note: Rates are estimated for educational purposes and reflect typical software QA costs in Latin America for mid-level developers.*
 
----
 
-## 📸 Evidence – Screenshots
-
-| No. | Screenshot | Description |
-|-----|-------------|-------------|
-| 1 | ![JUnit Config](Images/img1.png) | JUnit and JaCoCo setup in IntelliJ |
-| 2 | ![Passing Tests](Images/img2.png) | Successful test suite execution |
-| 3 | ![Coverage Report](Images/img3.png) | JaCoCo report reaching 91% coverage |
-| 4 | ![Jest Graph Test](Images/img4.png) | Jest coverage of nearby cities visualization |
-| 5 | ![GitHub CI](Images/img5.png) | Automated test execution in GitHub Actions |
 
 ---
 
