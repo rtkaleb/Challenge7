@@ -592,8 +592,242 @@ The resulting testing suite ensures that any future updates to the visualization
 - Node.js API Reference: [https://nodejs.org/en/docs](https://nodejs.org/en/docs)
 
 
+---
+
+# Sprint 3: Project Documentation & Diagrams
+
+This sprint consolidates **documentation** and **architecture diagrams** for the two testing tracks of the project:
+- **Java (JUnit) — Reservations module**
+- **JavaScript (Jest) — Nearby Cities Graph visualization**
+
+It is aimed at making the repository easy to understand, run, and extend for the Digital NAO team and future contributors.
+
+---
+
+## 1) Project Overview
+
+**BookingMx** is a Mexican hospitality website. The new functionality adds a **graph of nearby cities** to a destination as an exploration aid for the user.  
+This repository contains:
+- A **Java reservations module** (domain model, service & repository) with **JUnit** unit tests.
+- A **JavaScript graph module** that renders a small **city–distance graph** with **Jest** unit tests.
+- Documentation, examples, and **PDF diagrams** describing the architecture and test flow.
+
+> See `docs/Challenge7_Diagrams.pdf` generated in this sprint for a visual overview.
+
+---
+
+## 2) Final Repository Structure 
+
+```
+/
+├─ README.md
+├─ README_addendum_feedback.md
+├─ peer-review.md
+├─ docs/
+│  ├─ Challenge7_Diagrams.pdf
+│  └─ Evidence/
+│     ├─ js-coverage-console.png
+│     ├─ js-coverage-summary.png
+│     ├─ junit-console.png
+│     └─ jacoco-index.png
+├─ Images/
+│  └─ (opcional: capturas o diagramas extra para el README)
+├─ .github/
+│  └─ workflows/
+│     └─ ci.yml
+├─ java-reservations/
+│  ├─ pom.xml
+│  └─ src/
+│     ├─ main/
+│     │  └─ java/
+│     │     └─ com/
+│     │        └─ bookingmx/
+│     │           └─ reservations/
+│     │              ├─ model/
+│     │              │  └─ Reservation.java
+│     │              ├─ repository/
+│     │              │  └─ ReservationRepository.java
+│     │              └─ service/
+│     │                 └─ ReservationService.java
+│     └─ test/
+│        └─ java/
+│           └─ com/
+│              └─ bookingmx/
+│                 └─ reservations/
+│                    ├─ ReservationServiceTest.java
+│                    └─ (más pruebas JUnit)
+│  └─ target/
+│     └─ site/
+│        └─ jacoco/
+│           ├─ index.html
+│           └─ jacoco.xml
+└─ js-graph/
+   ├─ package.json
+   ├─ jest.config.js           (opcional si necesitas configuración explícita)
+   ├─ src/
+   │  ├─ graph_oop.js          (refactor OOP — mueve aquí el archivo)
+   │  ├─ graph.js              (tu módulo original si sigue existiendo)
+   │  └─ view.js               (render/UI si aplica)
+   └─ __tests__/
+      ├─ graph.malformed.test.js
+      ├─ graph.large.test.js
+      ├─ graph.performance.test.js
+      └─ graph.test.js         (tus pruebas originales)
+
+```
+---
+cd java-reservations
+mvn -q test
+# Surefire prints summary; jacoco writes coverage to target/site/jacoco/index.html
+```
+
+**Expected output (snippet):**
+```
+[INFO] Results:
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
 
 
+### 4.2 Jest — Graph of Nearby Cities (Sprint 2)
+- **Functions**: building a graph from input; calculating/validating city edges; formatting distances.
+- **Rendering guards**: behavior with **empty**, **inconsistent**, or **unexpected** data.
+- **Edge cases**: same-city edges, negative/NaN distances, disconnected nodes.
+- **Coverage goal**: ≥ **90%**.
+
+**Run & report:**
+```bash
+cd js-graph
+npm test
+```
+
+**Expected output (snippet):**
+```
+ PASS  __tests__/graph.test.js
+  graph(): builds nodes/edges
+  formatDistance(): handles decimals
+  validateGraph(): rejects negative distances
+----------|---------|----------|---------|---------|
+File      | % Stmts | % Branch | % Funcs | % Lines |
+----------|---------|----------|---------|---------|
+All files |   92.31 |    90.12 |   94.44 |   92.20 |
+----------|---------|----------|---------|---------|
+```
+
+---
+
+## *) Diverse Test Scenarios
+- **Malformed data**: `js-graph/__tests__/graph.malformed.test.js`
+  - Non-array inputs, non-string/empty city names, negative/NaN/Infinity `km`, safe ignore of self-loops.
+- **Large graphs**: `js-graph/__tests__/graph.large.test.js`
+  - Ring graph of 1,000 nodes; verifies size, edge count, and soft timing.
+  - Parallel edge de-duplication — keeps minimum distance.
+- **Performance under load**: `js-graph/__tests__/graph.performance.test.js`
+  - Dense cluster of 200 nodes (~19,900 edges) to stress adjacency handling.
+  - Soft timing threshold; `jest.setTimeout(15000)` to avoid CI flakiness.
+
+> Note: Thresholds are **soft** and environment-dependent. Tune numbers if your CI is slower/faster.
+
+## **) Peer Review Log
+- Added `peer-review.md` template to capture reviewer names, scope, checklist, findings, action items, and sign-off.
+
+## 3) JS OOP Refactor
+- New ES module `graph_oop.js` exporting a `Graph` class with:
+  - `static fromEdges(edges, { validate: true })`
+  - `addEdge(u, v, km)`, `neighbors(u)`, `validate()`
+  - Automatic de-duplication of parallel edges (keeps minimum `km`).
+  - Safe ignore of self-loops to simplify visualization.
+- This design improves **reusability**, **encapsulation**, and **testability**.
+
+---
+
+## 5) Code Documentation Standards
+
+### 5.1 Java — Javadoc
+- Add Javadoc on **classes, public methods, and non-trivial private methods**.
+- Explain **parameters**, **return values**, **exceptions**, and **side effects**.
+
+**Example:**
+```java
+/**
+ * Computes the total payable amount for a reservation.
+ *
+ * @param nightlyRate nightly price in MXN
+ * @param nights number of nights; must be >= 1
+ * @return total in MXN
+ * @throws IllegalArgumentException if nightlyRate < 0 or nights < 1
+ */
+public BigDecimal computeTotal(BigDecimal nightlyRate, int nights) { ... }
+```
+
+### 5.2 JavaScript — JSDoc
+- Document **module exports**, **public functions**, and any complex helper.
+- Clarify **data shapes** used by the graph.
+
+**Example:**
+```js
+/**
+ * Builds a normalized graph from a list of { from, to, km } edges.
+ * @param {{from:string,to:string,km:number}[]} edges
+ * @returns {{nodes:Set<string>, edges:{from:string,to:string,km:number}[]}}
+ * @throws {TypeError} if edges is not an array
+ */
+export function buildGraph(edges) { ... }
+```
+
+> Keep tone **concise** and **consistent** across modules. Prefer imperative mood and clear parameter contracts.
+
+---
+
+## 6) Architecture & Diagrams
+
+The PDF **`docs/Challenge7_Diagrams.pdf`** (generated in this sprint) includes:
+1. **System Architecture** — Browser → JS Graph → REST API (Java) → Services → Data Store.
+2. **Module/Class Overview** — Reservations domain & services + JS graph module.
+3. **Test & CI Flow** — Developer → Jest/JUnit → Coverage → (optional) GitHub Actions status.
+
+
+---
+
+## 7) Access & Permissions
+
+- Set repository visibility (private/public) as agreed with **Digital NAO**.
+- Ensure the Digital NAO reviewers have **read** access (and **write** if they must push feedback branches).
+- If using **Git LFS** for images/reports, confirm members can fetch LFS objects.
+
+**GitHub quick check:**
+1. Settings → Collaborators & teams → Add the reviewers.
+2. Settings → Branches → Protect `main` (optional) and require PR review.
+3. Settings → Actions → Enable workflows if using CI for tests/coverage.
+
+---
+
+## 8) Quality Review Checklist (Sprint 3)
+
+- [ ] README explains project goals & how to run tests (both stacks).
+- [ ] Clear **install steps** (Java & Node) + reproducible commands.
+- [ ] **Javadoc/JsDoc** added to important functions and classes.
+- [ ] **Diagrams PDF** up to date in `docs/`.
+- [ ] Coverage evidence (goal ≥ **90%**) committed or reproducible.
+- [ ] Access permissions verified for the **Digital NAO** team.
+- [ ] Typos/formatting pass; links and paths validated.
+
+---
+
+## 9) Troubleshooting
+
+- **Node/Jest cannot import ES modules**: ensure `"type": "module"` in `package.json` or convert to CommonJS.
+- **Maven cannot find tests**: verify file pattern `**/*Test.java` and package declarations.
+- **Coverage below 90%**: add tests for branches (invalid inputs, thrown exceptions, edge cases).
+- **Windows PowerShell path issues**: prefer repository-relative paths; avoid spaces or quote paths properly.
+
+---
+
+## 10) Changelog
+
+- **Sprint 1**: JUnit tests for Reservations module (setup, core/edge tests, ≥90% target).
+- **Sprint 2**: Jest tests for Graph module (setup, edge cases, coverage ≥90%). 
+- **Sprint 3**: Consolidated README, Javadoc/JsDoc pass, and **architecture diagrams (PDF)**.
 
 ---
 
