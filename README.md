@@ -663,16 +663,16 @@ This repository contains:
 │           └─ jacoco.xml
 └─ js-graph/
    ├─ package.json
-   ├─ jest.config.js           (opcional si necesitas configuración explícita)
+   ├─ jest.config.js           
    ├─ src/
-   │  ├─ graph_oop.js          (refactor OOP — mueve aquí el archivo)
-   │  ├─ graph.js              (tu módulo original si sigue existiendo)
-   │  └─ view.js               (render/UI si aplica)
+   │  ├─ graph_oop.js          
+   │  ├─ graph.js              
+   │  └─ view.js               
    └─ __tests__/
       ├─ graph.malformed.test.js
       ├─ graph.large.test.js
       ├─ graph.performance.test.js
-      └─ graph.test.js         (tus pruebas originales)
+      └─ graph.test.js         
 
 ```
 ---
